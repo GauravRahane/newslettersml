@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sanghvi Movers Limited — Newsletters</title>
+
+  <!-- ===== SML Brand: inline CSS ===== -->
+  <style>
+    /* -------- Brand variables (you can swap to official HEX if you have them) -------- */
+    :root {
+      /* Dark theme (default) */
+      --brand-red: #D8232A;     /* Sanghvi Red (approx.) */
+      --brand-black: #1C1C1C;   /* Charcoal/Near black */
+      --brand-gray: #3A3A3A;    /* Dark gray */
+      --brand-light: #F4F4F4;   /* Light gray */
+
+      --bg-start: #0b0b0f;      /* Subtle dark gradient */
+      --bg-end: #171720;
+      --txt: #FFFFFF;
+      --muted: #C7C7CC;
+      --accent: var(--brand-red);
+      --accent-2: #FF6A6F;      /* lighter red glow */
+      --card: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.15);
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+
+    /* Light theme (toggle-able) */
+    [data-theme="light"] {
+      --bg-start: var(--brand-light);
+      --bg-end: #EDEDED;
+      --txt: var(--brand-black);
+      --muted: #565656;
+      --accent: var(--brand-red);
+      --accent-2: #AC1118;
+      --card: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.12);
+      --shadow: rgba(0, 0, 0, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Segoe UI Emoji", "Segoe UI Symbol";
+      color: var(--txt);
+      background: radial-gradient(1200px 800px at 10% 10%, var(--bg-end), var(--bg-start));
+      overflow: hidden;
+    }
+
+    /* Animated ambient glow in SML red */
+    body::before {
+      content: "";
+      position: fixed; inset: -40% -40%;
+      background:
+        radial-gradient(closest-side, rgba(216,35,42,0.25), transparent 60%),
+        radial-gradient(closest-side, rgba(255,106,111,0.18), transparent 60%);
+      filter: blur(50px);
+      animation: floatGlow 16s ease-in-out infinite;
+      z-index: -1;
+    }
+    @keyframes floatGlow {
+      0%, 100% { transform: translate(0,0); }
+      50% { transform: translate(20px, -12px); }
+    }
+
+    .app-shell { display: grid; grid-template-rows: auto auto 1fr auto; height: 100vh; }
+
+    /* ---- Header with brand bar ---- */
+    .brand-bar {
+      background: linear-gradient(90deg, var(--brand-red), #B11118 50%, var(--brand-black));
+      height: 4px;
+      width: 100%;
+    }
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(6px);
+    }
+    .brand-left { display: flex; align-items: center; gap: 14px; }
+
+    /* ---- Inline SVG logo ---- */
+    .logo-wrap {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--txt);
+    }
+    .logo-square {
+      height: 36px; width: 36px; border-radius: 6px; flex-shrink: 0;
+      box-shadow: 0 6px 14px rgba(216,35,42,.28);
+      transition: transform .2s ease;
+    }
+    .logo-wrap:hover .logo-square { transform: scale(1.03); }
+    .logo-word {
+      display: inline-block;
+      font-weight: 800; letter-spacing: .6px; font-size: 18px;
+      color: var(--txt);
+    }
+    .logo-sub {
+      display: block; margin-top: 0; font-size: 12px; letter-spacing: .4px;
+      color: var(--muted);
+    }
+
+    .brand-title h1 {
+      margin: 0; font-size: 1.1rem; letter-spacing: .3px; font-weight: 700;
+    }
+    .brand-title small {
+      display: block; margin-top: 2px; color: var(--muted); font-weight: 500;
+    }
+    .header-actions { display: flex; gap: 8px; }
+
+    /* ---- Ghost buttons with red hover ---- */
+    .ghost-btn {
+      background: transparent; border: 1px solid var(--border); color: var(--txt);
+      padding: 8px 10px; border-radius: 10px; cursor: pointer; transition: all .2s ease;
+    }
+    .ghost-btn:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 18px var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    /* ---- Tabs ---- */
+    .tabs {
+      display: grid; grid-auto-flow: column; gap: 10px; padding: 12px 20px; overflow-x: auto;
+    }
+    .tab {
+      position: relative; appearance: none; border: none; color: var(--txt); background: var(--card);
+      border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px; cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .2s ease;
+    }
+    .tab:hover { transform: translateY(-2px); box-shadow: 0 10px 22px var(--shadow); border-color: var(--accent); }
+    .tab.active {
+      background: linear-gradient(180deg, rgba(216,35,42,0.18), rgba(0,0,0,0));
+      border-color: var(--accent);
+    }
+    .tab::after { /* shimmer underline in red */
+      content: ""; position: absolute; left: 12px; right: 12px; bottom: 6px; height: 2px; border-radius: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+      opacity: 0; transform: translateY(4px);
+      transition: transform .2s ease, opacity .2s ease;
+    }
+    .tab:hover::after { opacity: 1; transform: translateY(0); }
+
+    /* ---- Panels ---- */
+    .panels { position: relative; padding: 12px 20px 20px; }
+    .panel {
+      display: none; height: calc(100vh - 200px);
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+      box-shadow: 0 20px 40px var(--shadow);
+      transform-origin: center; animation: fadeSlideOut .22s ease both;
+    }
+    .panel.show { display: grid; grid-template-rows: auto 1fr; animation: fadeSlideIn .28s ease both; }
+    .panel:focus { outline: 2px dashed var(--accent); outline-offset: 4px; }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px) scale(.98); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+    @keyframes fadeSlideOut {
+      from { opacity: 1; transform: translateY(0)    scale(1); }
+      to   { opacity: 0; transform: translateY(-8px) scale(.98); }
+    }
+
+    /* Panel header with red accent */
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(216,35,42,0.08), transparent);
+    }
+    .panel-header h2 { margin: 0; font-size: 1.1rem; color: var(--txt); }
+    .panel-actions { display: flex; align-items: center; gap: 10px; }
+    .zoom-label { font-size: .9rem; color: var(--muted); }
+
+    /* ---- PDF frame & skeleton ---- */
+    .pdf-frame {
+      position: relative; overflow: hidden; background: rgba(0,0,0,0.15);
+    }
+    .pdf-frame iframe {
+      width: 100%; height: 100%; border: none; transform-origin: top left; will-change: transform;
+    }
+    .skeleton {
+      position: absolute; inset: 0; background:
+        linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+      animation: shimmer 1.2s linear infinite; z-index: 1;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-45%); }
+      100% { transform: translateX(45%); }
+    }
+
+    /* ---- Footer ---- */
+    .app-footer { padding: 8px 20px; color: var(--muted); }
+    kbd { background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .panel { height: calc(100vh - 240px); }
+      .tab { padding: 8px 10px; font-size: .95rem; }
+      .panel-header h2 { font-size: 1rem; }
+      .logo-word { font-size: 16px; }
+      .logo-square { height: 32px; width: 32px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- top brand bar -->
+  <div class="brand-bar" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-left">
+
+        <!-- Inline SVG logo (approximation to SML mark) -->
+        <span class="logo-wrap" aria-label="Sanghvi Movers Limited logo">
+          <!-- Red square with stylized white S -->
+          <svg class="logo-square" viewBox="0 0 100 100" role="img" aria-label="SML logo mark">
+            <defs>
+              <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#D8232A"/>
+                <stop offset="100%" stop-color="#B11118"/>
+              </linearGradient>
+              <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,.25)"/>
+              </filter>
+            </defs>
+            <rect x="4" y="4" width="92" height="92" rx="14" fill="url(#gRed)" filter="url(#softGlow)"/>
+            <!-- Stylized 'S' (white) -->
+            <path d="M70 26c-9-6-21-6-30 0-7 5-7 13 2 16l12 4c6 2 7 8 2 12a22 22 0 0 1-24 1"
+                  fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+          </svg>
+
+          <!-- Wordmark (SANGHVI MOVERS LIMITED) -->
+          <span>
+            <span class="logo-word">SANGHVI</span>
+            <span class="logo-sub">MOVERS LIMITED</span>
+          </span>
+        </span>
+
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="ghost-btn" aria-label="Toggle theme" title="Toggle theme">🌗</button>
+        <button id="fsToggle" class="ghost-btn" aria-label="Enter fullscreen" title="Fullscreen">⛶</button>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs" role="tablist" aria-label="Newsletter tabs">
+      <button class="tab active" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1" data-target="panel-1">Newsletter 1</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" data-target="panel-2">Newsletter 2</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" data-target="panel-3">Newsletter 3</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-4" id="tab-4" data-target="panel-4">Newsletter 4</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-5" id="tab-5" data-target="panel-5">Newsletter 5</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-6" id="tab-6" data-target="panel-6">Newsletter 6</button>
+    </nav>
+
+    <!-- Panels -->
+    <main class="panels" id="panels">
+      <!-- Panel 1 -->
+      <section class="panel show" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+        <div class="panel-header">
+          <h2>Newsletter 1</h2>
+          <div class="panel-actions">
+            <label class="zoom-label" for="zoom-1">Zoom</label>
+            <input type="range" id="zoom-1" min="0.8" max="1.6" value="1" step="0.05" />
+            assets/newsletters/newsletter-1.pdf⬇</a>
+            assets/newsletters/newsletter-1.pdf🖨</button>
+          </div>
+        </div>
+        <div class="pdf-frame" data-zoom="1">
+          <div class="skeleton"></div>
+          assets/newsletters/newsletter-1.pdf#toolbar=1&navpanes=0</iframe>
+        </div>
+      </section>
+
+      <!-- Panel 2 -->
+      <section class="panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0">
+        <div class="panel-header">
+          <h2>Newsletter 2</h2>
+          <div class="panel-actions">
+            <label class="zoom-label" for="zoom-2">Zoom</label>
+            <input type="range" id="zoom-2" min="0.8" max="1.6" value="1" step="0.05" />
+            assets/newsletters/newsletter-2.pdf⬇</a>
+            assets/newsletters/newsletter-2.pdf🖨</button>
+          </div>
+        </div>
+        <div class="pdf-frame" data-zoom="1">
+          <div class="skeleton"></div>
+          assets/newsletters/newsletter-2.pdf#toolbar=1&navpanes=0</iframe>
+        </div>
+      </section>
+
+      <!-- Panel 3 -->
+      <section class="panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0">
+        <div class="panel-header">
+          <h2>Newsletter 3</h2>
+          <div class="panel-actions">
+            <label class="zoom-label" for="zoom-3">Zoom</label>
+            <input type="range" id="zoom-3" min="0.8" max="1.6" value="1" step="0.05" />
+            assets/newsletters/newsletter-3.pdf⬇</a>
+            assets/newsletters/newsletter-3.pdf🖨</button>
+          </div>
+        </div>
+        <div class="pdf-frame" data-zoom="1">
+          <div class="skeleton"></div>
+          assets/newsletters/newsletter-3.pdf#toolbar=1&navpanes=0</iframe>
+        </div>
+      </section>
+
+      <!-- Panel 4 -->
+      <section class="panel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0">
+        <div class="panel-header">
+          <h2>Newsletter 4</h2>
+          <div class="panel-actions">
+            <label class="zoom-label" for="zoom-4">Zoom</label>
+            <input type="range" id="zoom-4" min="0.8" max="1.6" value="1" step="0.05" />
+            assets/newsletters/newsletter-4.pdf⬇</a>
+            assets/newsletters/newsletter-4.pdf🖨</button>
+          </div>
+        </div>
+        <div class="pdf-frame" data-zoom="1">
+          <div class="skeleton"></div>
+          assets/newsletters/newsletter-4.pdf#toolbar=1&navpanes=0</iframe>
+        </div>
+      </section>
+
+      <!-- Panel 5 -->
+      <section class="panel" role="tabpanel" id="panel-5" aria-labelledby="tab-5" tabindex="0">
+        <div class="panel-header">
+          <h2>Newsletter 5</h2>
+          <div class="panel-actions">
+            <label class="zoom-label" for="zoom-5">Zoom</label>
+            <input type="range" id="zoom-5" min="0.8" max="1.6" value="1" step="0.05" />
+            assets/newsletters/newsletter-5.pdf⬇</a>
+            assets/newsletters/newsletter-5.pdf🖨</button>
+          </div>
+        </div>
+        <div class="pdf-frame" data-zoom="1">
+          <div class="skeleton"></div>
+          assets/newsletters/newsletter-5.pdf#toolbar=1&navpanes=0</iframe>
+        </div>
+      </section>
+
+      <!-- Panel 6 -->
+      <section class="panel" role="tabpanel" id="panel-6" aria-labelledby="tab-6" tabindex="0">
+        <div class="panel-header">
+          <h2>Newsletter 6</h2>
+          <div class="panel-actions">
+            <label class="zoom-label" for="zoom-6">Zoom</label>
+            <input type="range" id="zoom-6" min="0.8" max="1.6" value="1" step="0.05" />
+            assets/newsletters/newsletter-6.pdf⬇</a>
+            assets/newsletters/newsletter-6.pdf🖨</button>
+          </div>
+        </div>
+        <div class="pdf-frame" data-zoom="1">
+          <div class="skeleton"></div>
+          assets/newsletters/newsletter-6.pdf#toolbar=1&navpanes=0</iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <small>Tip: Use <kbd>1–6</kbd> to switch tabs, <kbd>←</kbd>/<kbd>→</kbd> to navigate, <kbd>F</kbd> for fullscreen, and <kbd>+</kbd>/<kbd>-</kbd> to zoom.</small>
+    </footer>
+  </div>
+
+  <!-- ===== Inline JS ===== -->
+  <script>
+    // Helpers
+    const $  = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+    // Tabs
+    const tabs   = $$('.tab');
+    const panels = $$('.panel');
+
+    function showPanel(id) {
+      panels.forEach(p => p.classList.remove('show'));
+      tabs.forEach(t => t.classList.remove('active'));
+      const el = $('#' + id);
+      if (el) el.classList.add('show');
+      const tab = $(`.tab[data-target="${id}"]`);
+      if (tab) tab.classList.add('active');
+      history.replaceState(null, '', `#${id}`);
+      if (el) el.focus();
+    }
+    tabs.forEach(tab => tab.addEventListener('click', () => showPanel(tab.dataset.target)));
+
+    // Hash init
+    (function initFromHash(){
+      const hash = location.hash.replace('#','');
+      if (hash && $("#" + hash)) { showPanel(hash); } else { showPanel('panel-1'); }
+    })();
+
+    // Skeleton → hide after PDF loads
+    $$('.pdf-frame').forEach(frame => {
+      const iframe   = $('iframe', frame);
+      const skeleton = $('.skeleton', frame);
+      iframe.addEventListener('load', () => { if (skeleton) skeleton.style.display = 'none'; });
+    });
+
+    // Zoom controls
+    $$('input[type="range"]').forEach(range => {
+      range.addEventListener('input', () => {
+        const panel  = range.closest('.panel');
+        const frame  = $('.pdf-frame', panel);
+        frame.dataset.zoom = range.value;
+        const iframe = $('iframe', frame);
+        iframe.style.transform = `scale(${range.value})`;
+      });
+    });
+
+    // Print
+    $$('.print-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.getAttribute('data-src');
+        const w = window.open(src, '_blank');
+        if (w) { w.addEventListener('load', () => w.print()); }
+      });
+    });
+
+    // Fullscreen
+    const fsToggle = $('#fsToggle');
+    fsToggle.addEventListener('click', () => {
+      const shell = $('.app-shell');
+      if (!document.fullscreenElement) {
+        shell.requestFullscreen().catch(err => console.warn(err));
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    // Theme toggle
+    const themeToggle = $('#themeToggle');
+    const root = document.documentElement;
+    function setTheme(mode){
+      root.setAttribute('data-theme', mode);
+      localStorage.setItem('theme', mode);
+    }
+    (function initTheme(){
+      const persisted = localStorage.getItem('theme');
+      if (persisted) setTheme(persisted);
+    })();
+    themeToggle.addEventListener('click', () => {
+      const cur = root.getAttribute('data-theme');
+      setTheme(cur === 'light' ? '' : 'light');
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key >= '1' && e.key <= '6') showPanel(`panel-${e.key}`);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
+        let nextIdx = activeIdx + (e.key === 'ArrowRight' ? 1 : -1);
+        if (nextIdx < 0) nextIdx = tabs.length - 1;
+        if (nextIdx >= tabs.length) nextIdx = 0;
+        showPanel(tabs[nextIdx].dataset.target);
+      }
+      if (e.key.toLowerCase() === 'f') fsToggle.click();
+      if (e.key === '+' || e.key === '=') {
+        const activePanel = $('.panel.show'); if (!activePanel) return;
+        const range = $('input[type="range"]', activePanel);
+        const val = Math.min(parseFloat(range.value) + 0.05, parseFloat(range.max));
+        range.value = val.toFixed(2); range.dispatchEvent(new Event('input'));
+      }
+      if (e.key === '-') {
+        const activePanel = $('.panel.show'); if (!activePanel) return;
+        const range = $('input[type="range"]', activePanel);
+        const val = Math.max(parseFloat(range.value) - 0.05, parseFloat(range.min));
+        range.value = val.toFixed(2); range.dispatchEvent(new Event('input'));
+      }
+    });
+  </script>
+</body>
+</html>
+``
