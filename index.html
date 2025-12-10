@@ -2,437 +2,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- SML — Newsletters (Summary + Full Text, interactive headings & animations) -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sanghvi Movers Limited — Newsletters</title>
+  <title>Sanghvi Movers Limited — Newsletters (Summary View)</title>
 
-  <!-- ===== SML Brand: inline CSS ===== -->
   <style>
-    /* -------- Brand variables (you can swap to official HEX if you have them) -------- */
     :root {
-      /* Dark theme (default) */
-      --brand-red: #D8232A;     /* Sanghvi Red (approx.) */
-      --brand-black: #1C1C1C;   /* Charcoal/Near black */
-      --brand-gray: #3A3A3A;    /* Dark gray */
-      --brand-light: #F4F4F4;   /* Light gray */
+      --brand-red:#D8232A; --brand-black:#1C1C1C; --brand-gray:#3A3A3A; --brand-light:#F4F4F4;
+      --bg-start:#0b0b0f; --bg-end:#171720; --txt:#FFFFFF; --muted:#C7C7CC;
+      --accent:var(--brand-red); --accent-2:#FF6A6F; --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.15); --shadow:rgba(0,0,0,.35);
+      --ok:#35c46e; --warn:#f5a623;
+    }
+    [data-theme="light"]{
+      --bg-start:var(--brand-light); --bg-end:#EDEDED; --txt:var(--brand-black); --muted:#565656;
+      --accent:var(--brand-red); --accent-2:#AC1118; --card:#FFF; --border:rgba(0,0,0,.12); --shadow:rgba(0,0,0,.10);
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--txt);
+         background:radial-gradient(1200px 800px at 10% 10%,var(--bg-end),var(--bg-start));overflow:hidden}
+    body::before{content:"";position:fixed;inset:-40% -40%;
+      background:radial-gradient(closest-side,rgba(216,35,42,.25),transparent 60%),
+                 radial-gradient(closest-side,rgba(255,106,111,.18),transparent 60%);
+      filter:blur(50px);animation:floatGlow 16s ease-in-out infinite;z-index:-1}
+    @keyframes floatGlow{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-12px)}}
 
-      --bg-start: #0b0b0f;      /* Subtle dark gradient */
-      --bg-end: #171720;
-      --txt: #FFFFFF;
-      --muted: #C7C7CC;
-      --accent: var(--brand-red);
-      --accent-2: #FF6A6F;      /* lighter red glow */
-      --card: rgba(255, 255, 255, 0.06);
-      --border: rgba(255, 255, 255, 0.15);
-      --shadow: rgba(0, 0, 0, 0.35);
-    }
+    .app-shell{display:grid;grid-template-rows:auto auto 1fr auto;height:100vh}
+    .brand-bar{background:linear-gradient(90deg,var(--brand-red),#B11118 50%,var(--brand-black));height:4px}
+    .app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)}
+    .brand-left{display:flex;align-items:center;gap:12px}
+    .logo-square{height:36px;width:36px;border-radius:6px;flex-shrink:0;box-shadow:0 6px 14px rgba(216,35,42,.28)}
+    .logo-word{font-weight:800;letter-spacing:.6px;font-size:18px;color:var(--txt)}
+    .logo-sub{display:block;margin-top:0;font-size:12px;letter-spacing:.4px;color:var(--muted)}
+    .ghost-btn{background:transparent;border:1px solid var(--border);color:var(--txt);padding:8px 10px;border-radius:10px;cursor:pointer;transition:all .2s}
+    .ghost-btn:hover{border-color:var(--accent);box-shadow:0 8px 18px var(--shadow);transform:translateY(-1px)}
+    .link-row{display:flex;gap:8px;align-items:center}
+    .badge{display:inline-block;background:rgba(216,35,42,.15);border:1px solid var(--accent);color:var(--txt);padding:4px 8px;border-radius:10px;font-size:.8rem}
 
-    /* Light theme (toggle-able) */
-    [data-theme="light"] {
-      --bg-start: var(--brand-light);
-      --bg-end: #EDEDED;
-      --txt: var(--brand-black);
-      --muted: #565656;
-      --accent: var(--brand-red);
-      --accent-2: #AC1118;
-      --card: #FFFFFF;
-      --border: rgba(0, 0, 0, 0.12);
-      --shadow: rgba(0, 0, 0, 0.10);
-    }
+    .tabs{display:grid;grid-auto-flow:column;gap:10px;padding:12px 20px;overflow-x:auto}
+    .tab{position:relative;appearance:none;border:none;color:var(--txt);background:var(--card);
+         border:1px solid var(--border);padding:10px 14px;border-radius:12px;cursor:pointer;
+         transition:transform .18s ease, box-shadow .18s ease, border-color .2s ease}
+    .tab:hover{transform:translateY(-2px);box-shadow:0 10px 22px var(--shadow);border-color:var(--accent)}
+    .tab.active{background:linear-gradient(180deg,rgba(216,35,42,.18),rgba(0,0,0,0));border-color:var(--accent)}
+    .tab::after{content:"";position:absolute;left:12px;right:12px;bottom:6px;height:2px;border-radius:2px;
+                background:linear-gradient(90deg,transparent,var(--accent),var(--accent-2),transparent);
+                opacity:0;transform:translateY(4px);transition:transform .2s ease, opacity .2s ease}
+    .tab:hover::after{opacity:1;transform:translateY(0)}
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Segoe UI Emoji", "Segoe UI Symbol";
-      color: var(--txt);
-      background: radial-gradient(1200px 800px at 10% 10%, var(--bg-end), var(--bg-start));
-      overflow: hidden;
-    }
+    .panels{position:relative;padding:12px 20px 20px}
+    .panel{display:none;height:calc(100vh - 230px);background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px var(--shadow)}
+    .panel.show{display:grid;grid-template-rows:auto auto 1fr}
 
-    /* Animated ambient glow in SML red */
-    body::before {
-      content: "";
-      position: fixed; inset: -40% -40%;
-      background:
-        radial-gradient(closest-side, rgba(216,35,42,0.25), transparent 60%),
-        radial-gradient(closest-side, rgba(255,106,111,0.18), transparent 60%);
-      filter: blur(50px);
-      animation: floatGlow 16s ease-in-out infinite;
-      z-index: -1;
-    }
-    @keyframes floatGlow {
-      0%, 100% { transform: translate(0,0); }
-      50% { transform: translate(20px, -12px); }
-    }
+    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);
+                  background:linear-gradient(180deg,rgba(216,35,42,.08),transparent)}
+    .panel-header h2{margin:0;font-size:1.1rem}
+    .view-toggle{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.06)}
+    .toggle-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--txt);cursor:pointer;transition:.2s}
+    .toggle-btn.active{border-color:var(--accent);background:rgba(216,35,42,.15)}
 
-    .app-shell { display: grid; grid-template-rows: auto auto 1fr auto; height: 100vh; }
+    .scroll-area{overflow:auto}
 
-    /* ---- Header with brand bar ---- */
-    .brand-bar {
-      background: linear-gradient(90deg, var(--brand-red), #B11118 50%, var(--brand-black));
-      height: 4px;
-      width: 100%;
-    }
-    .app-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(6px);
-    }
-    .brand-left { display: flex; align-items: center; gap: 14px; }
+    /* Summary cards */
+    .summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding:12px}
+    .summary-card{position:relative;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:14px;padding:12px 14px;cursor:pointer;
+                  transform:translateY(8px);opacity:0;transition:transform .25s ease, opacity .25s ease, box-shadow .25s ease, border-color .2s}
+    .summary-card.in-view{transform:translateY(0);opacity:1}
+    .summary-card:hover{box-shadow:0 12px 24px var(--shadow);border-color:var(--accent)}
+    .summary-card h3{margin:0 0 8px;font-size:1rem;color:var(--accent);position:relative}
+    .summary-card h3::after{content:"";position:absolute;left:0;bottom:-4px;width:60px;height:2px;background:var(--accent);opacity:.6;animation:pulseUnderline 1.4s ease-in-out infinite}
+    @keyframes pulseUnderline{0%,100%{opacity:.2;width:40px}50%{opacity:.8;width:70px}}
+    .summary-card ul{margin:0;padding-left:18px;color:var(--txt)}
+    .summary-card .more{margin-top:8px;display:none;color:var(--muted)}
+    .summary-card.expanded .more{display:block}
 
-    /* ---- Inline SVG logo ---- */
-    .logo-wrap {
-      display: inline-flex; align-items: center; gap: 10px;
-      color: var(--txt);
-    }
-    .logo-square {
-      height: 36px; width: 36px; border-radius: 6px; flex-shrink: 0;
-      box-shadow: 0 6px 14px rgba(216,35,42,.28);
-      transition: transform .2s ease;
-    }
-    .logo-wrap:hover .logo-square { transform: scale(1.03); }
-    .logo-word {
-      display: inline-block;
-      font-weight: 800; letter-spacing: .6px; font-size: 18px;
-      color: var(--txt);
-    }
-    .logo-sub {
-      display: block; margin-top: 0; font-size: 12px; letter-spacing: .4px;
-      color: var(--muted);
-    }
+    /* Full text accordion */
+    .accordion{padding:6px 12px}
+    .acc-item{border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;background:rgba(255,255,255,.06)}
+    .acc-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer}
+    .acc-head h4{margin:0;color:var(--accent);font-size:1rem}
+    .acc-body{max-height:0;overflow:hidden;transition:max-height .28s ease}
+    .acc-body.open{max-height:600px}
+    .acc-body pre{margin:0;padding:10px 12px;white-space:pre-wrap;color:var(--txt)}
 
-    .brand-title h1 {
-      margin: 0; font-size: 1.1rem; letter-spacing: .3px; font-weight: 700;
-    }
-    .brand-title small {
-      display: block; margin-top: 2px; color: var(--muted); font-weight: 500;
-    }
-    .header-actions { display: flex; gap: 8px; }
+    .loading{padding:16px;color:var(--muted)}
+    .app-footer{padding:8px 20px;color:var(--muted)}
+    kbd{background:rgba(255,255,255,0.1);border:1px solid var(--border);border-radius:6px;padding:2px 6px}
 
-    /* ---- Ghost buttons with red hover ---- */
-    .ghost-btn {
-      background: transparent; border: 1px solid var(--border); color: var(--txt);
-      padding: 8px 10px; border-radius: 10px; cursor: pointer; transition: all .2s ease;
-    }
-    .ghost-btn:hover {
-      border-color: var(--accent);
-      box-shadow: 0 8px 18px var(--shadow);
-      transform: translateY(-1px);
-    }
-
-    /* ---- Tabs ---- */
-    .tabs {
-      display: grid; grid-auto-flow: column; gap: 10px; padding: 12px 20px; overflow-x: auto;
-    }
-    .tab {
-      position: relative; appearance: none; border: none; color: var(--txt); background: var(--card);
-      border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px; cursor: pointer;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .2s ease;
-    }
-    .tab:hover { transform: translateY(-2px); box-shadow: 0 10px 22px var(--shadow); border-color: var(--accent); }
-    .tab.active {
-      background: linear-gradient(180deg, rgba(216,35,42,0.18), rgba(0,0,0,0));
-      border-color: var(--accent);
-    }
-    .tab::after { /* shimmer underline in red */
-      content: ""; position: absolute; left: 12px; right: 12px; bottom: 6px; height: 2px; border-radius: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
-      opacity: 0; transform: translateY(4px);
-      transition: transform .2s ease, opacity .2s ease;
-    }
-    .tab:hover::after { opacity: 1; transform: translateY(0); }
-
-    /* ---- Panels ---- */
-    .panels { position: relative; padding: 12px 20px 20px; }
-    .panel {
-      display: none; height: calc(100vh - 200px);
-      background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
-      box-shadow: 0 20px 40px var(--shadow);
-      transform-origin: center; animation: fadeSlideOut .22s ease both;
-    }
-    .panel.show { display: grid; grid-template-rows: auto 1fr; animation: fadeSlideIn .28s ease both; }
-    .panel:focus { outline: 2px dashed var(--accent); outline-offset: 4px; }
-
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(8px) scale(.98); }
-      to   { opacity: 1; transform: translateY(0)    scale(1); }
-    }
-    @keyframes fadeSlideOut {
-      from { opacity: 1; transform: translateY(0)    scale(1); }
-      to   { opacity: 0; transform: translateY(-8px) scale(.98); }
-    }
-
-    /* Panel header with red accent */
-    .panel-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px; border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(216,35,42,0.08), transparent);
-    }
-    .panel-header h2 { margin: 0; font-size: 1.1rem; color: var(--txt); }
-    .panel-actions { display: flex; align-items: center; gap: 10px; }
-    .zoom-label { font-size: .9rem; color: var(--muted); }
-
-    /* ---- PDF frame & skeleton ---- */
-    .pdf-frame {
-      position: relative; overflow: hidden; background: rgba(0,0,0,0.15);
-    }
-    .pdf-frame iframe {
-      width: 100%; height: 100%; border: none; transform-origin: top left; will-change: transform;
-    }
-    .skeleton {
-      position: absolute; inset: 0; background:
-        linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.18), rgba(255,255,255,0.08));
-      animation: shimmer 1.2s linear infinite; z-index: 1;
-    }
-    @keyframes shimmer {
-      0% { transform: translateX(-45%); }
-      100% { transform: translateX(45%); }
-    }
-
-    /* ---- Footer ---- */
-    .app-footer { padding: 8px 20px; color: var(--muted); }
-    kbd { background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; }
-
-    /* ---- Responsive ---- */
-    @media (max-width: 768px) {
-      .panel { height: calc(100vh - 240px); }
-      .tab { padding: 8px 10px; font-size: .95rem; }
-      .panel-header h2 { font-size: 1rem; }
-      .logo-word { font-size: 16px; }
-      .logo-square { height: 32px; width: 32px; }
-    }
+    @media (max-width:768px){.panel{height:calc(100vh - 270px)}.logo-square{height:32px;width:32px}.logo-word{font-size:16px}}
   </style>
 </head>
-
 <body>
-  <!-- top brand bar -->
   <div class="brand-bar" aria-hidden="true"></div>
-
   <div class="app-shell">
-    <!-- Header -->
     <header class="app-header">
       <div class="brand-left">
-
-        <!-- Inline SVG logo (approximation to SML mark) -->
-        <span class="logo-wrap" aria-label="Sanghvi Movers Limited logo">
-          <!-- Red square with stylized white S -->
-          <svg class="logo-square" viewBox="0 0 100 100" role="img" aria-label="SML logo mark">
-            <defs>
-              <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#D8232A"/>
-                <stop offset="100%" stop-color="#B11118"/>
-              </linearGradient>
-              <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,.25)"/>
-              </filter>
-            </defs>
-            <rect x="4" y="4" width="92" height="92" rx="14" fill="url(#gRed)" filter="url(#softGlow)"/>
-            <!-- Stylized 'S' (white) -->
-            <path d="M70 26c-9-6-21-6-30 0-7 5-7 13 2 16l12 4c6 2 7 8 2 12a22 22 0 0 1-24 1"
-                  fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
-          </svg>
-
-          <!-- Wordmark (SANGHVI MOVERS LIMITED) -->
-          <span>
-            <span class="logo-word">SANGHVI</span>
-            <span class="logo-sub">MOVERS LIMITED</span>
-          </span>
-        </span>
-
+        <svg class="logo-square" viewBox="0 0 100 100" role="img" aria-label="SML logo">
+          <defs>
+            <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#D8232A"/><stop offset="100%" stop-color="#B11118"/>
+            </linearGradient>
+          </defs>
+          <rect x="4" y="4" width="92" height="92" rx="14" fill="url(#gRed)"/>
+          <path d="M70 26c-9-6-21-6-30 0-7 5-7 13 2 16l12 4c6 2 7 8 2 12a22 22 0 0 1-24 1"
+                fill="none" stroke="#FFF" stroke-width="10" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <span class="logo-word">SANGHVI</span><span class="logo-sub">MOVERS LIMITED</span>
+        </div>
       </div>
-      <div class="header-actions">
-        <button id="themeToggle" class="ghost-btn" aria-label="Toggle theme" title="Toggle theme">🌗</button>
-        <button id="fsToggle" class="ghost-btn" aria-label="Enter fullscreen" title="Fullscreen">⛶</button>
+      <div class="link-row">
+        <button id="themeToggle" class="ghost-btn" title="Toggle theme">🌗</button>
+        <span class="badge">Summary View</span>
       </div>
     </header>
 
-    <!-- Tabs -->
     <nav class="tabs" role="tablist" aria-label="Newsletter tabs">
-      <button class="tab active" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1" data-target="panel-1">Newsletter 1</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" data-target="panel-2">Newsletter 2</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" data-target="panel-3">Newsletter 3</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-4" id="tab-4" data-target="panel-4">Newsletter 4</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-5" id="tab-5" data-target="panel-5">Newsletter 5</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-6" id="tab-6" data-target="panel-6">Newsletter 6</button>
+      <button class="tab active" role="tab" aria-controls="panel-1" id="tab-1" data-target="panel-1">Newsletter 1</button>
+      <button class="tab" role="tab" aria-controls="panel-2" id="tab-2" data-target="panel-2">Newsletter 2</button>
+      <button class="tab" role="tab" aria-controls="panel-3" id="tab-3" data-target="panel-3">Newsletter 3</button>
+      <button class="tab" role="tab" aria-controls="panel-4" id="tab-4" data-target="panel-4">Newsletter 4</button>
+      <button class="tab" role="tab" aria-controls="panel-5" id="tab-5" data-target="panel-5">Newsletter 5</button>
+      <button class="tab" role="tab" aria-controls="panel-6" id="tab-6" data-target="panel-6">Newsletter 6</button>
     </nav>
 
-    <!-- Panels -->
-    <main class="panels" id="panels">
-      <!-- Panel 1 -->
-      <section class="panel show" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+    <!-- Panels: header + toggle + scroll area (summary + full text) -->
+    <main class="panels">
+      <!-- Template repeated for 1..6 -->
+      <section class="panel show" id="panel-1">
         <div class="panel-header">
           <h2>Newsletter 1</h2>
-          <div class="panel-actions">
-            <label class="zoom-label" for="zoom-1">Zoom</label>
-            <input type="range" id="zoom-1" min="0.8" max="1.6" value="1" step="0.05" />
-            assets/newsletters/newsletter-1.pdf⬇</a>
-            assets/newsletters/newsletter-1.pdf🖨</button>
+          <div class="link-row">
+            #Open PDF ⤴</a>
           </div>
         </div>
-        <div class="pdf-frame" data-zoom="1">
-          <div class="skeleton"></div>
-          assets/newsletters/newsletter-1.pdf#toolbar=1&navpanes=0</iframe>
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="summary">Summary</button>
+          <button class="toggle-btn" data-view="full">Full Text</button>
+        </div>
+        <div class="scroll-area">
+          <div class="summary-grid" id="summary-1"></div>
+          <div class="accordion" id="full-1" style="display:none"></div>
+          <div class="loading" id="loading-1">Loading & summarizing…</div>
         </div>
       </section>
 
-      <!-- Panel 2 -->
-      <section class="panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0">
+      <section class="panel" id="panel-2">
         <div class="panel-header">
           <h2>Newsletter 2</h2>
-          <div class="panel-actions">
-            <label class="zoom-label" for="zoom-2">Zoom</label>
-            <input type="range" id="zoom-2" min="0.8" max="1.6" value="1" step="0.05" />
-            assets/newsletters/newsletter-2.pdf⬇</a>
-            assets/newsletters/newsletter-2.pdf🖨</button>
-          </div>
+          <div class="link-row">#Open PDF ⤴</a></div>
         </div>
-        <div class="pdf-frame" data-zoom="1">
-          <div class="skeleton"></div>
-          assets/newsletters/newsletter-2.pdf#toolbar=1&navpanes=0</iframe>
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="summary">Summary</button>
+          <button class="toggle-btn" data-view="full">Full Text</button>
+        </div>
+        <div class="scroll-area">
+          <div class="summary-grid" id="summary-2"></div>
+          <div class="accordion" id="full-2" style="display:none"></div>
+          <div class="loading" id="loading-2">Loading & summarizing…</div>
         </div>
       </section>
 
-      <!-- Panel 3 -->
-      <section class="panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0">
+      <section class="panel" id="panel-3">
         <div class="panel-header">
           <h2>Newsletter 3</h2>
-          <div class="panel-actions">
-            <label class="zoom-label" for="zoom-3">Zoom</label>
-            <input type="range" id="zoom-3" min="0.8" max="1.6" value="1" step="0.05" />
-            assets/newsletters/newsletter-3.pdf⬇</a>
-            assets/newsletters/newsletter-3.pdf🖨</button>
-          </div>
+          <div class="link-row">#Open PDF ⤴</a></div>
         </div>
-        <div class="pdf-frame" data-zoom="1">
-          <div class="skeleton"></div>
-          assets/newsletters/newsletter-3.pdf#toolbar=1&navpanes=0</iframe>
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="summary">Summary</button>
+          <button class="toggle-btn" data-view="full">Full Text</button>
+        </div>
+        <div class="scroll-area">
+          <div class="summary-grid" id="summary-3"></div>
+          <div class="accordion" id="full-3" style="display:none"></div>
+          <div class="loading" id="loading-3">Loading & summarizing…</div>
         </div>
       </section>
 
-      <!-- Panel 4 -->
-      <section class="panel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0">
+      <section class="panel" id="panel-4">
         <div class="panel-header">
           <h2>Newsletter 4</h2>
-          <div class="panel-actions">
-            <label class="zoom-label" for="zoom-4">Zoom</label>
-            <input type="range" id="zoom-4" min="0.8" max="1.6" value="1" step="0.05" />
-            assets/newsletters/newsletter-4.pdf⬇</a>
-            assets/newsletters/newsletter-4.pdf🖨</button>
-          </div>
+          <div class="link-row">#Open PDF ⤴</a></div>
         </div>
-        <div class="pdf-frame" data-zoom="1">
-          <div class="skeleton"></div>
-          assets/newsletters/newsletter-4.pdf#toolbar=1&navpanes=0</iframe>
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="summary">Summary</button>
+          <button class="toggle-btn" data-view="full">Full Text</button>
+        </div>
+        <div class="scroll-area">
+          <div class="summary-grid" id="summary-4"></div>
+          <div class="accordion" id="full-4" style="display:none"></div>
+          <div class="loading" id="loading-4">Loading & summarizing…</div>
         </div>
       </section>
 
-      <!-- Panel 5 -->
-      <section class="panel" role="tabpanel" id="panel-5" aria-labelledby="tab-5" tabindex="0">
+      <section class="panel" id="panel-5">
         <div class="panel-header">
           <h2>Newsletter 5</h2>
-          <div class="panel-actions">
-            <label class="zoom-label" for="zoom-5">Zoom</label>
-            <input type="range" id="zoom-5" min="0.8" max="1.6" value="1" step="0.05" />
-            assets/newsletters/newsletter-5.pdf⬇</a>
-            assets/newsletters/newsletter-5.pdf🖨</button>
-          </div>
+          <div class="link-row">#Open PDF ⤴</a></div>
         </div>
-        <div class="pdf-frame" data-zoom="1">
-          <div class="skeleton"></div>
-          assets/newsletters/newsletter-5.pdf#toolbar=1&navpanes=0</iframe>
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="summary">Summary</button>
+          <button class="toggle-btn" data-view="full">Full Text</button>
+        </div>
+        <div class="scroll-area">
+          <div class="summary-grid" id="summary-5"></div>
+          <div class="accordion" id="full-5" style="display:none"></div>
+          <div class="loading" id="loading-5">Loading & summarizing…</div>
         </div>
       </section>
 
-      <!-- Panel 6 -->
-      <section class="panel" role="tabpanel" id="panel-6" aria-labelledby="tab-6" tabindex="0">
+      <section class="panel" id="panel-6">
         <div class="panel-header">
           <h2>Newsletter 6</h2>
-          <div class="panel-actions">
-            <label class="zoom-label" for="zoom-6">Zoom</label>
-            <input type="range" id="zoom-6" min="0.8" max="1.6" value="1" step="0.05" />
-            assets/newsletters/newsletter-6.pdf⬇</a>
-            assets/newsletters/newsletter-6.pdf🖨</button>
-          </div>
+          <div class="link-row">#Open PDF ⤴</a></div>
         </div>
-        <div class="pdf-frame" data-zoom="1">
-          <div class="skeleton"></div>
-          assets/newsletters/newsletter-6.pdf#toolbar=1&navpanes=0</iframe>
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="summary">Summary</button>
+          <button class="toggle-btn" data-view="full">Full Text</button>
+        </div>
+        <div class="scroll-area">
+          <div class="summary-grid" id="summary-6"></div>
+          <div class="accordion" id="full-6" style="display:none"></div>
+          <div class="loading" id="loading-6">Loading & summarizing…</div>
         </div>
       </section>
     </main>
 
     <footer class="app-footer">
-      <small>Tip: Use <kbd>1–6</kbd> to switch tabs, <kbd>←</kbd>/<kbd>→</kbd> to navigate, <kbd>F</kbd> for fullscreen, and <kbd>+</kbd>/<kbd>-</kbd> to zoom.</small>
+      <small>Tip: Use <kbd>1–6</kbd> to switch tabs; click cards to expand; headings animate into view.</small>
     </footer>
   </div>
 
-  <!-- ===== Inline JS ===== -->
-  <script>
-    // Helpers
+  <!-- ===== JS: PDF.js (ESM via jsDelivr) + Summarizer + UI ===== -->
+  <script type="module">
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.449/+esm';
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.449/build/pdf.worker.min.js';
+
+    // Configure your PDF paths or URLs
+    const PDF_URLS = [
+      'assets/newsletters/newsletter-1.pdf',
+      'assets/newsletters/newsletter-2.pdf',
+      'assets/newsletters/newsletter-3.pdf',
+      'assets/newsletters/newsletter-4.pdf',
+      'assets/newsletters/newsletter-5.pdf',
+      'assets/newsletters/newsletter-6.pdf'
+    ];
+
     const $  = (sel, ctx=document) => ctx.querySelector(sel);
     const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-
-    // Tabs
-    const tabs   = $$('.tab');
-    const panels = $$('.panel');
-
-    function showPanel(id) {
-      panels.forEach(p => p.classList.remove('show'));
-      tabs.forEach(t => t.classList.remove('active'));
-      const el = $('#' + id);
-      if (el) el.classList.add('show');
-      const tab = $(`.tab[data-target="${id}"]`);
-      if (tab) tab.classList.add('active');
-      history.replaceState(null, '', `#${id}`);
-      if (el) el.focus();
-    }
-    tabs.forEach(tab => tab.addEventListener('click', () => showPanel(tab.dataset.target)));
-
-    // Hash init
-    (function initFromHash(){
-      const hash = location.hash.replace('#','');
-      if (hash && $("#" + hash)) { showPanel(hash); } else { showPanel('panel-1'); }
-    })();
-
-    // Skeleton → hide after PDF loads
-    $$('.pdf-frame').forEach(frame => {
-      const iframe   = $('iframe', frame);
-      const skeleton = $('.skeleton', frame);
-      iframe.addEventListener('load', () => { if (skeleton) skeleton.style.display = 'none'; });
-    });
-
-    // Zoom controls
-    $$('input[type="range"]').forEach(range => {
-      range.addEventListener('input', () => {
-        const panel  = range.closest('.panel');
-        const frame  = $('.pdf-frame', panel);
-        frame.dataset.zoom = range.value;
-        const iframe = $('iframe', frame);
-        iframe.style.transform = `scale(${range.value})`;
-      });
-    });
-
-    // Print
-    $$('.print-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const src = btn.getAttribute('data-src');
-        const w = window.open(src, '_blank');
-        if (w) { w.addEventListener('load', () => w.print()); }
-      });
-    });
-
-    // Fullscreen
-    const fsToggle = $('#fsToggle');
-    fsToggle.addEventListener('click', () => {
-      const shell = $('.app-shell');
-      if (!document.fullscreenElement) {
-        shell.requestFullscreen().catch(err => console.warn(err));
-      } else {
-        document.exitFullscreen();
-      }
-    });
 
     // Theme toggle
     const themeToggle = $('#themeToggle');
@@ -450,31 +269,106 @@
       setTheme(cur === 'light' ? '' : 'light');
     });
 
-    // Keyboard shortcuts
+    // Tabs
+    const tabs   = $$('.tab');
+    const panels = $$('.panel');
+    function showPanel(id) {
+      panels.forEach(p => p.classList.remove('show'));
+      tabs.forEach(t => t.classList.remove('active'));
+      const el = '#' + id;
+      $(el)?.classList.add('show');
+      $(`.tab[data-target="${id}"]`)?.classList.add('active');
+      history.replaceState(null, '', `#${id}`);
+    }
+    tabs.forEach(tab => tab.addEventListener('click', () => showPanel(tab.dataset.target)));
     window.addEventListener('keydown', (e) => {
       if (e.key >= '1' && e.key <= '6') showPanel(`panel-${e.key}`);
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-        const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
-        let nextIdx = activeIdx + (e.key === 'ArrowRight' ? 1 : -1);
-        if (nextIdx < 0) nextIdx = tabs.length - 1;
-        if (nextIdx >= tabs.length) nextIdx = 0;
-        showPanel(tabs[nextIdx].dataset.target);
+    });
+    (function initHash(){ const h = location.hash.replace('#',''); showPanel(h || 'panel-1'); })();
+
+    // -------- Simple client-side extractive summarizer --------
+    const STOP_WORDS = new Set(['the','a','an','and','or','but','if','in','on','of','for','to','with','at','by','from','as','is','are','was','were','be','been','it','its','this','that','these','those','we','you','they']);
+    function tokenize(text){ return text.toLowerCase().match(/[a-zA-Z0-9]+/g) || []; }
+    function sentences(text){ return text.split(/(?<=[.!?])\s+/).filter(s=> s.trim().length>0); }
+    function freqMap(words){ const f={}; for(const w of words){ if(STOP_WORDS.has(w)) continue; f[w]=(f[w]||0)+1; } return f; }
+    function scoreSentence(s, f){ let score=0; for(const w of tokenize(s)){ if(f[w]) score+=f[w]; } return score; }
+    function summarize(text, k=3){
+      const sents = sentences(text);
+      if(sents.length<=k) return sents;
+      const f = freqMap(tokenize(text));
+      const ranked = sents.map((s,i)=>({s, i, score: scoreSentence(s,f)})).sort((a,b)=> b.score - a.score);
+      const topIdx = new Set(ranked.slice(0, Math.min(k, ranked.length)).map(r=>r.i));
+      return sents.filter((_,i)=> topIdx.has(i));
+    }
+
+    // Intersection Observer for card animation
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); } });
+    }, {threshold: 0.2});
+
+    // Build each newsletter view
+    PDF_URLS.forEach(async (url, idx)=>{
+      const n = idx+1;
+      const openLink   = document.getElementById(`open-${n}`);
+      const summaryGrid= document.getElementById(`summary-${n}`);
+      const fullAcc    = document.getElementById(`full-${n}`);
+      const loading    = document.getElementById(`loading-${n}`);
+      if(openLink) openLink.href = url;
+
+      try{
+        const loadingTask = pdfjsLib.getDocument(url);
+        const pdf = await loadingTask.promise;
+        for(let p=1; p<=pdf.numPages; p++){
+          const page = await pdf.getPage(p);
+          const textContent = await page.getTextContent();
+          let maxSize=0, heading=''; const parts=[];
+          textContent.items.forEach(item=>{
+            const s=item.str||''; const t=item.transform||[1,0,0,1,0,0]; const size=Math.abs(t[0]);
+            if(size>maxSize && s.trim().length>=6){ maxSize=size; heading=s.trim(); }
+            parts.push(s);
+          });
+          const fullText = parts.join(' ');
+          const bullets  = summarize(fullText, 3);
+
+          // Summary card
+          const card = document.createElement('div'); card.className='summary-card';
+          const h3   = document.createElement('h3'); h3.textContent = heading ? `Page ${p}: ${heading}` : `Page ${p}`;
+          const ul   = document.createElement('ul'); bullets.forEach(b=>{ const li=document.createElement('li'); li.textContent=b; ul.appendChild(li); });
+          const more = document.createElement('div'); more.className='more'; more.textContent = summarize(fullText, 5).slice(3).join(' ');
+          card.appendChild(h3); card.appendChild(ul); card.appendChild(more);
+          card.addEventListener('click', ()=> card.classList.toggle('expanded'));
+          summaryGrid.appendChild(card); io.observe(card);
+
+          // Full text accordion item
+          const item   = document.createElement('div'); item.className='acc-item';
+          const head   = document.createElement('div'); head.className='acc-head';
+          const h4     = document.createElement('h4'); h4.textContent = heading ? `Page ${p}: ${heading}` : `Page ${p}`;
+          const chevron= document.createElement('span'); chevron.textContent='▸';
+          head.appendChild(h4); head.appendChild(chevron);
+          const body   = document.createElement('div'); body.className='acc-body';
+          const pre    = document.createElement('pre'); pre.textContent = fullText; body.appendChild(pre);
+          head.addEventListener('click', ()=>{ body.classList.toggle('open'); chevron.textContent = body.classList.contains('open') ? '▾' : '▸'; });
+          item.appendChild(head); item.appendChild(body);
+          fullAcc.appendChild(item);
+        }
+        if(loading) loading.remove();
+      }catch(err){
+        if(loading) loading.textContent='Failed to load or summarize.';
+        console.error('PDF error', err);
       }
-      if (e.key.toLowerCase() === 'f') fsToggle.click();
-      if (e.key === '+' || e.key === '=') {
-        const activePanel = $('.panel.show'); if (!activePanel) return;
-        const range = $('input[type="range"]', activePanel);
-        const val = Math.min(parseFloat(range.value) + 0.05, parseFloat(range.max));
-        range.value = val.toFixed(2); range.dispatchEvent(new Event('input'));
-      }
-      if (e.key === '-') {
-        const activePanel = $('.panel.show'); if (!activePanel) return;
-        const range = $('input[type="range"]', activePanel);
-        const val = Math.max(parseFloat(range.value) - 0.05, parseFloat(range.min));
-        range.value = val.toFixed(2); range.dispatchEvent(new Event('input'));
-      }
+    });
+
+    // View toggles per panel
+    $$('.toggle-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const panel = btn.closest('.panel');
+        const summary = panel.querySelector('.summary-grid');
+        const full    = panel.querySelector('.accordion');
+        panel.querySelectorAll('.toggle-btn').forEach(b=> b.classList.remove('active'));
+        btn.classList.add('active');
+        if(btn.dataset.view==='summary'){ summary.style.display='grid'; full.style.display='none'; }
+        else { summary.style.display='none'; full.style.display='block'; }
+      });
     });
   </script>
 </body>
-</html>
-``
