@@ -1,374 +1,1173 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- SML — Newsletters (Summary + Full Text, interactive headings & animations) -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sanghvi Movers Limited — Newsletters (Summary View)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insight Sphere - Industry Newsletter Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    :root {
-      --brand-red:#D8232A; --brand-black:#1C1C1C; --brand-gray:#3A3A3A; --brand-light:#F4F4F4;
-      --bg-start:#0b0b0f; --bg-end:#171720; --txt:#FFFFFF; --muted:#C7C7CC;
-      --accent:var(--brand-red); --accent-2:#FF6A6F; --card:rgba(255,255,255,.06);
-      --border:rgba(255,255,255,.15); --shadow:rgba(0,0,0,.35);
-      --ok:#35c46e; --warn:#f5a623;
-    }
-    [data-theme="light"]{
-      --bg-start:var(--brand-light); --bg-end:#EDEDED; --txt:var(--brand-black); --muted:#565656;
-      --accent:var(--brand-red); --accent-2:#AC1118; --card:#FFF; --border:rgba(0,0,0,.12); --shadow:rgba(0,0,0,.10);
-    }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--txt);
-         background:radial-gradient(1200px 800px at 10% 10%,var(--bg-end),var(--bg-start));overflow:hidden}
-    body::before{content:"";position:fixed;inset:-40% -40%;
-      background:radial-gradient(closest-side,rgba(216,35,42,.25),transparent 60%),
-                 radial-gradient(closest-side,rgba(255,106,111,.18),transparent 60%);
-      filter:blur(50px);animation:floatGlow 16s ease-in-out infinite;z-index:-1}
-    @keyframes floatGlow{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-12px)}}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    .app-shell{display:grid;grid-template-rows:auto auto 1fr auto;height:100vh}
-    .brand-bar{background:linear-gradient(90deg,var(--brand-red),#B11118 50%,var(--brand-black));height:4px}
-    .app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)}
-    .brand-left{display:flex;align-items:center;gap:12px}
-    .logo-square{height:36px;width:36px;border-radius:6px;flex-shrink:0;box-shadow:0 6px 14px rgba(216,35,42,.28)}
-    .logo-word{font-weight:800;letter-spacing:.6px;font-size:18px;color:var(--txt)}
-    .logo-sub{display:block;margin-top:0;font-size:12px;letter-spacing:.4px;color:var(--muted)}
-    .ghost-btn{background:transparent;border:1px solid var(--border);color:var(--txt);padding:8px 10px;border-radius:10px;cursor:pointer;transition:all .2s}
-    .ghost-btn:hover{border-color:var(--accent);box-shadow:0 8px 18px var(--shadow);transform:translateY(-1px)}
-    .link-row{display:flex;gap:8px;align-items:center}
-    .badge{display:inline-block;background:rgba(216,35,42,.15);border:1px solid var(--accent);color:var(--txt);padding:4px 8px;border-radius:10px;font-size:.8rem}
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
 
-    .tabs{display:grid;grid-auto-flow:column;gap:10px;padding:12px 20px;overflow-x:auto}
-    .tab{position:relative;appearance:none;border:none;color:var(--txt);background:var(--card);
-         border:1px solid var(--border);padding:10px 14px;border-radius:12px;cursor:pointer;
-         transition:transform .18s ease, box-shadow .18s ease, border-color .2s ease}
-    .tab:hover{transform:translateY(-2px);box-shadow:0 10px 22px var(--shadow);border-color:var(--accent)}
-    .tab.active{background:linear-gradient(180deg,rgba(216,35,42,.18),rgba(0,0,0,0));border-color:var(--accent)}
-    .tab::after{content:"";position:absolute;left:12px;right:12px;bottom:6px;height:2px;border-radius:2px;
-                background:linear-gradient(90deg,transparent,var(--accent),var(--accent-2),transparent);
-                opacity:0;transform:translateY(4px);transition:transform .2s ease, opacity .2s ease}
-    .tab:hover::after{opacity:1;transform:translateY(0)}
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .panels{position:relative;padding:12px 20px 20px}
-    .panel{display:none;height:calc(100vh - 230px);background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px var(--shadow)}
-    .panel.show{display:grid;grid-template-rows:auto auto 1fr}
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);
-                  background:linear-gradient(180deg,rgba(216,35,42,.08),transparent)}
-    .panel-header h2{margin:0;font-size:1.1rem}
-    .view-toggle{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.06)}
-    .toggle-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--txt);cursor:pointer;transition:.2s}
-    .toggle-btn.active{border-color:var(--accent);background:rgba(216,35,42,.15)}
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
 
-    .scroll-area{overflow:auto}
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
 
-    /* Summary cards */
-    .summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding:12px}
-    .summary-card{position:relative;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:14px;padding:12px 14px;cursor:pointer;
-                  transform:translateY(8px);opacity:0;transition:transform .25s ease, opacity .25s ease, box-shadow .25s ease, border-color .2s}
-    .summary-card.in-view{transform:translateY(0);opacity:1}
-    .summary-card:hover{box-shadow:0 12px 24px var(--shadow);border-color:var(--accent)}
-    .summary-card h3{margin:0 0 8px;font-size:1rem;color:var(--accent);position:relative}
-    .summary-card h3::after{content:"";position:absolute;left:0;bottom:-4px;width:60px;height:2px;background:var(--accent);opacity:.6;animation:pulseUnderline 1.4s ease-in-out infinite}
-    @keyframes pulseUnderline{0%,100%{opacity:.2;width:40px}50%{opacity:.8;width:70px}}
-    .summary-card ul{margin:0;padding-left:18px;color:var(--txt)}
-    .summary-card .more{margin-top:8px;display:none;color:var(--muted)}
-    .summary-card.expanded .more{display:block}
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
 
-    /* Full text accordion */
-    .accordion{padding:6px 12px}
-    .acc-item{border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;background:rgba(255,255,255,.06)}
-    .acc-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer}
-    .acc-head h4{margin:0;color:var(--accent);font-size:1rem}
-    .acc-body{max-height:0;overflow:hidden;transition:max-height .28s ease}
-    .acc-body.open{max-height:600px}
-    .acc-body pre{margin:0;padding:10px 12px;white-space:pre-wrap;color:var(--txt)}
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
 
-    .loading{padding:16px;color:var(--muted)}
-    .app-footer{padding:8px 20px;color:var(--muted)}
-    kbd{background:rgba(255,255,255,0.1);border:1px solid var(--border);border-radius:6px;padding:2px 6px}
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-    @media (max-width:768px){.panel{height:calc(100vh - 270px)}.logo-square{height:32px;width:32px}.logo-word{font-size:16px}}
-  </style>
+        .tab {
+            flex: 1;
+            min-width: 150px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            border: none;
+            font-size: 1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .tab:hover {
+            background: #f1f3f5;
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: white;
+        }
+
+        .tab.active::before {
+            width: 100%;
+        }
+
+        .content {
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2a5298;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        .subsection {
+            margin-bottom: 25px;
+        }
+
+        .subsection-title {
+            font-size: 1.3em;
+            color: #495057;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 1em;
+        }
+
+        .project-list {
+            list-style: none;
+        }
+
+        .project-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+            transition: all 0.3s ease;
+        }
+
+        .project-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .project-name {
+            font-weight: 600;
+            color: #2a5298;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .project-details {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        ul.content-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul.content-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        ul.content-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .contact-section h3 {
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .contact-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                min-width: 120px;
+                font-size: 0.9em;
+                padding: 15px 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="brand-bar" aria-hidden="true"></div>
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="brand-left">
-        <svg class="logo-square" viewBox="0 0 100 100" role="img" aria-label="SML logo">
-          <defs>
-            <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#D8232A"/><stop offset="100%" stop-color="#B11118"/>
-            </linearGradient>
-          </defs>
-          <rect x="4" y="4" width="92" height="92" rx="14" fill="url(#gRed)"/>
-          <path d="M70 26c-9-6-21-6-30 0-7 5-7 13 2 16l12 4c6 2 7 8 2 12a22 22 0 0 1-24 1"
-                fill="none" stroke="#FFF" stroke-width="10" stroke-linecap="round"/>
-        </svg>
-        <div>
-          <span class="logo-word">SANGHVI</span><span class="logo-sub">MOVERS LIMITED</span>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ INSIGHT SPHERE</h1>
+            <p>India's Comprehensive Industry Newsletter Hub</p>
         </div>
-      </div>
-      <div class="link-row">
-        <button id="themeToggle" class="ghost-btn" title="Toggle theme">🌗</button>
-        <span class="badge">Summary View</span>
-      </div>
-    </header>
 
-    <nav class="tabs" role="tablist" aria-label="Newsletter tabs">
-      <button class="tab active" role="tab" aria-controls="panel-1" id="tab-1" data-target="panel-1">Newsletter 1</button>
-      <button class="tab" role="tab" aria-controls="panel-2" id="tab-2" data-target="panel-2">Newsletter 2</button>
-      <button class="tab" role="tab" aria-controls="panel-3" id="tab-3" data-target="panel-3">Newsletter 3</button>
-      <button class="tab" role="tab" aria-controls="panel-4" id="tab-4" data-target="panel-4">Newsletter 4</button>
-      <button class="tab" role="tab" aria-controls="panel-5" id="tab-5" data-target="panel-5">Newsletter 5</button>
-      <button class="tab" role="tab" aria-controls="panel-6" id="tab-6" data-target="panel-6">Newsletter 6</button>
-    </nav>
-
-    <!-- Panels: header + toggle + scroll area (summary + full text) -->
-    <main class="panels">
-      <!-- Template repeated for 1..6 -->
-      <section class="panel show" id="panel-1">
-        <div class="panel-header">
-          <h2>Newsletter 1</h2>
-          <div class="link-row">
-            #Open PDF ⤴</a>
-          </div>
+        <div class="tabs" id="tabs">
+            <button class="tab active" onclick="showTab('building-road')">Building & Road Infra</button>
+            <button class="tab" onclick="showTab('cement')">Cement</button>
+            <button class="tab" onclick="showTab('chemical')">Chemical & Fertilizers</button>
+            <button class="tab" onclick="showTab('oil-gas')">Oil & Gas</button>
+            <button class="tab" onclick="showTab('railway')">Railways & Metro</button>
+            <button class="tab" onclick="showTab('steel')">Steel</button>
+            <button class="tab" onclick="showTab('thermal')">Thermal & Nuclear</button>
+            <button class="tab" onclick="showTab('wind')">Wind Power</button>
         </div>
-        <div class="view-toggle">
-          <button class="toggle-btn active" data-view="summary">Summary</button>
-          <button class="toggle-btn" data-view="full">Full Text</button>
-        </div>
-        <div class="scroll-area">
-          <div class="summary-grid" id="summary-1"></div>
-          <div class="accordion" id="full-1" style="display:none"></div>
-          <div class="loading" id="loading-1">Loading & summarizing…</div>
-        </div>
-      </section>
 
-      <section class="panel" id="panel-2">
-        <div class="panel-header">
-          <h2>Newsletter 2</h2>
-          <div class="link-row">Open PDF ⤴</a></div>
+        <div class="content">
+            <!-- Building & Road Infrastructure -->
+            <div id="building-road" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">3rd</div>
+                        <div class="stat-label">Fastest Growing Construction Market</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2nd</div>
+                        <div class="stat-label">Largest National Road Network</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">₹111L Cr</div>
+                        <div class="stat-label">National Infrastructure Pipeline</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>From the expressways transforming the nation's connectivity to the metro corridors reshaping urban mobility, India's Building & Road Infrastructure sector is laying the foundation for a modern, connected, and future-ready economy. With over 65,000 km of highways under development, 15+ metro rail networks expanding, and the National Infrastructure Pipeline driving ₹111 lakh crore of investments, India is building one of the world's fastest-growing infrastructure ecosystems.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook - Buildings</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Real Estate Growth</h3>
+                        <ul class="content-list">
+                            <li>Real estate sector expected to reach US$ 1 trillion by 2030, up from US$ 200 billion in 2021</li>
+                            <li>Market estimated to increase at a CAGR of 19.5% during 2017-2028</li>
+                            <li>Expected to reach US$ 650 billion by 2025, representing 13% of India's GDP</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Key Developments</h3>
+                        <ul class="content-list">
+                            <li>ICRA expects new project launches across top seven cities to rise by 6-9% in FY26, reaching 620-640 million square feet</li>
+                            <li>Average home prices rose by 13-15% in FY25, expected to climb 3-5% in FY26</li>
+                            <li>Housing market witnessed sharp surge in FY25 with tier I cities recording Rs. 6,70,000 crore (US$ 76.53 billion) in sales</li>
+                            <li>India expected to add 30 million sq ft of shopping mall space by 2027</li>
+                            <li>Housing market ranked 15th globally in Q1 2025 with 7.7% annual price growth</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook - Roads</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Highway Network Expansion</h3>
+                        <ul class="content-list">
+                            <li>Total National Highways length reached 146,204 km as of August 2025</li>
+                            <li>5,614 km constructed in FY25 against target of 5,150 km</li>
+                            <li>Parvatmala Pariyojana plans 250+ ropeway projects with 1,200+ km length between FY23-FY28</li>
+                            <li>501 Wayside Amenities awarded, 94 operational, targeting 700 by FY29</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Massive Upgrade Plans</h3>
+                        <ul class="content-list">
+                            <li>Planning to upgrade 25,000 km of two-lane highways to four lanes at Rs. 10,00,000 crore (US$ 117 billion)</li>
+                            <li>16,000 km of four-lane highways to be expanded to six lanes for Rs. 6,00,000 crore (US$ 69.93 billion)</li>
+                            <li>3,100 kms of highways awarded in FY25 (up to December)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cement -->
+            <div id="cement" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">2nd</div>
+                        <div class="stat-label">Largest Cement Producer Globally</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3rd</div>
+                        <div class="stat-label">Largest Consumer of Cement</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">45 Mn Ton</div>
+                        <div class="stat-label">New Capacity in FY26</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>From the towering skylines of Mumbai to the expanding industrial hubs of Odisha and Andhra Pradesh, cement is the invisible force cementing India's growth story: strong, essential, and transformative. As India races towards becoming the world's third-largest economy with a projected GDP of $7.3 trillion by 2030, cement demand will surge across housing, infrastructure, and industrial sectors.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Production Capacity</h3>
+                        <ul class="content-list">
+                            <li>India's cement industry had an installed capacity of around 655 MTPA as of March 2025</li>
+                            <li>Industry analysts project 43–60 MTPA of new capacity in FY26</li>
+                            <li>Capacity projected to reach approximately 700 MTPA by March 2026</li>
+                            <li>Long-term target: 960 MTPA by FY35</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Growth Projections</h3>
+                        <ul class="content-list">
+                            <li>8% growth in sales projected for FY2026, fueled by government infrastructure investments</li>
+                            <li>UltraTech alone contributes over 183 MTPA capacity</li>
+                            <li>Expansion reflects strong demand growth and consolidation among major players</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Key Players Expansion</h2>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">1. UltraTech Cement</h3>
+                        <ul class="content-list">
+                            <li>Set to expand capacity by 29 MTPA over next two years, targeting 212.2 MTPA by FY27</li>
+                            <li>Commissioned 17.4 MTPA of new capacity in FY25</li>
+                            <li>Added 269 MW of renewable power in Q4 FY25, total green energy: 1.36 GW</li>
+                            <li>Investment of Rs. 10,000 crore planned for FY26</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">2. Adani Cement (ACC and Ambuja)</h3>
+                        <ul class="content-list">
+                            <li>Ambuja crossed 100 MTPA capacity in FY25, targeting 140 MTPA by FY28</li>
+                            <li>Acquired Penna Cement for Rs. 10,422 crore, increasing market share by 2% nationwide</li>
+                            <li>Rs. 6,000 crore investment for 1,000 MW renewable power capacity in Gujarat and Rajasthan</li>
+                            <li>ACC recorded highest-ever annual volume at 42.2 million tonnes in FY25</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">3. Shree Cement</h3>
+                        <ul class="content-list">
+                            <li>Ongoing projects in Jaitaran, Rajasthan (3.0 MTPA) and Kodla, Karnataka (3.0 MTPA)</li>
+                            <li>Total capacity to reach 68.8 MTPA upon commissioning</li>
+                            <li>Goal of 80 MTPA by 2028</li>
+                            <li>Enhanced green power generation to 582 MW by Q4 FY25</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">4. Dalmia Cement</h3>
+                        <ul class="content-list">
+                            <li>Expanding from 49.5 MTPA in FY25 to 75 MTPA by FY28</li>
+                            <li>Long-term target: 110–130 MTPA by FY31</li>
+                            <li>Setting up new 4 MTPA plant in Madhya Pradesh - first in India to operate entirely on renewable energy</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chemical & Fertilizers -->
+            <div id="chemical" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">6th</div>
+                        <div class="stat-label">Largest Chemical Producer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3rd</div>
+                        <div class="stat-label">Largest Polymer Consumer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">11% CAGR</div>
+                        <div class="stat-label">Specialty Chemicals Growth</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>The chemical and petrochemical industry in India forms an integral part of the growing Indian manufacturing industry and the country's economic growth. India is the sixth largest chemical producing country in the world and the third largest producer in Asia. The sector, currently valued around $220 billion, is projected to reach approximately $300–$304 billion by 2025 and surge towards $400 billion by 2030.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Production Breakdown</h3>
+                        <ul class="content-list">
+                            <li>Alkali Chemicals dominate with 72.9% share of total production</li>
+                            <li>Organic Chemicals account for 14.3% - representing future high-margin growth</li>
+                            <li>Inorganic Chemicals: 8.3%</li>
+                            <li>Dyes & Pigments: 2.3%</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Petrochemicals Growth</h3>
+                        <ul class="content-list">
+                            <li>Indian Petrochemical industry expected to grow at 6% CAGR till 2030</li>
+                            <li>Potential to reach from current USD 110 Bn to USD 550 Bn by 2030</li>
+                            <li>Specialty chemicals market expected to grow at 11.5% CAGR to reach USD 60Bn by 2027</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">State-wise Production</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>State</th>
+                                    <th>Share of Production</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Gujarat</td><td>53%</td></tr>
+                                <tr><td>Maharashtra</td><td>9%</td></tr>
+                                <tr><td>Tamil Nadu</td><td>6%</td></tr>
+                                <tr><td>Uttar Pradesh</td><td>6%</td></tr>
+                                <tr><td>Madhya Pradesh</td><td>5%</td></tr>
+                                <tr><td>Punjab</td><td>4%</td></tr>
+                                <tr><td>Others</td><td>17%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Major PCPIRs (Petroleum, Chemicals & Petrochemicals Investment Regions)</h2>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">1. Dahej PCPIR (Gujarat)</h3>
+                        <ul class="content-list">
+                            <li>Actual Investment: Rs. 1,12,873 crore</li>
+                            <li>Total Area: 453 Sq. Kms</li>
+                            <li>Employment Generated: 1.84 lakh</li>
+                            <li>Anchor Unit: ONGC Petro-additional Ltd.</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">2. Visakhapatnam PCPIR (Andhra Pradesh)</h3>
+                        <ul class="content-list">
+                            <li>Actual Investment: Rs. 43,744 crore</li>
+                            <li>Total Area: 604 Sq. Kms</li>
+                            <li>Employment Generated: 1.1 lakh</li>
+                            <li>Anchor Unit: Hindustan Petroleum Corporation Ltd.</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">3. Paradeep PCPIR (Odisha)</h3>
+                        <ul class="content-list">
+                            <li>Actual Investment: Rs. 45,000 crore</li>
+                            <li>Total Area: 284 Sq. Kms</li>
+                            <li>Employment Generated: 38,000</li>
+                            <li>Anchor Unit: Indian Oil Corporation Ltd.</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">4. Cuddalore-Nagapattinam PCPIR (Tamil Nadu)</h3>
+                        <ul class="content-list">
+                            <li>Actual Investment: Rs. 8,100 crore</li>
+                            <li>Total Area: 257 Sq. Kms</li>
+                            <li>Employment Generated: 13,950</li>
+                            <li>Anchor Unit: Nagarjuna Oil Corporation Ltd.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Oil & Gas -->
+            <div id="oil-gas" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">3rd</div>
+                        <div class="stat-label">Largest Oil Consumer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2nd</div>
+                        <div class="stat-label">Largest Refiner in Asia</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">258 MMTPA</div>
+                        <div class="stat-label">Total Refining Capacity</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>From the offshore fields of Mumbai High to the refineries of Jamnagar and emerging LNG terminals on the east coast, India's oil and gas industry fuels the nation's growth journey. With refining capacity surpassing 256 MMTPA, and energy demand projected to rise by over 50% by 2030, India ranks as the world's third-largest oil consumer.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Refining Capacity</h3>
+                        <ul class="content-list">
+                            <li>India has emerged as one of the largest refining hubs with total capacity of 258.1 MMTPA</li>
+                            <li>By 2030, India aims to raise capacity to over 309.5 MMTPA</li>
+                            <li>As of April 2025, India operates 23 refineries with cumulative capacity of 258.1 MMTPA</li>
+                            <li>In FY 2024-25, crude oil processed reached 267.28 MMT, reflecting 103.5% capacity utilisation</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Growth Projections</h3>
+                        <ul class="content-list">
+                            <li>India's natural gas consumption projected to grow by 60% by 2030, reaching 297 mmscmd</li>
+                            <li>Oil demand projected to reach 11 million barrels by 2045</li>
+                            <li>Petroleum product exports rose 3.4% to 64.7 million tonnes in FY25</li>
+                            <li>India aims for 126.3 million PNG connections and 18,336 CNG stations by 2034</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Strategic Expansion Drive</h2>
+                    
+                    <ul class="content-list">
+                        <li>ONGC initiating over 45 exploration and development wells in early 2025</li>
+                        <li>LNG terminal capacities rising from 5 to 6.3 million tonnes per annum at Dabhol</li>
+                        <li>Natural gas share targeted to grow from 6% to 15% by 2030</li>
+                        <li>BPCL planning to invest US$ 18.16 billion over five years</li>
+                        <li>Cairn Oil & Gas plans Rs. 8,609 crore ASP injection and Rs. 25,827-34,436 crore upstream expansion</li>
+                    </ul>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Railways & Metro -->
+            <div id="railway" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">2nd</div>
+                        <div class="stat-label">Largest Passenger Transport Output</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3rd</div>
+                        <div class="stat-label">Largest Metro Network in World</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">1,013 km</div>
+                        <div class="stat-label">Operational Metro Network</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>From the buzzing platforms of Delhi to the rising lines of Surat and Bhopal, Metros are silently stitching together the fabric of a new India: fast, efficient, and clean. India's operational metro network has soared from 248 km across 5 cities (in 2014) to 1,013 km across 23 cities by May 2025.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Metro Expansion</h3>
+                        <ul class="content-list">
+                            <li>Operational metro network: 1,013 km across 23 cities by May 2025</li>
+                            <li>Pace accelerated ninefold: from 0.68 km/month to 6 km/month today</li>
+                            <li>Annual metro budget 2025-26: ₹34,807 crore, up 6x from 2013-14</li>
+                            <li>Average daily ridership climbed from 28 lakh to over 1.12 crore</li>
+                            <li>Target: 2,000 km metro network by 2026</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Railway Modernization</h3>
+                        <ul class="content-list">
+                            <li>Railways budget increased by more than 9 times since 2014</li>
+                            <li>More than 31,000 km of new tracks laid since 2014</li>
+                            <li>200 new Vande Bharat trains, 100 Amrit Bharat trains planned</li>
+                            <li>7,134 coaches produced in 2024-25, marking 9% increase</li>
+                            <li>98.8% of broad-gauge network electrified as of Mar 2025</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Government Support & Investments</h2>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Key Initiatives</h3>
+                        <ul class="content-list">
+                            <li>National Infrastructure Pipeline: ₹111 lakh crore investment (2020-2025)</li>
+                            <li>Union Budget 2024-25: ₹2.55 lakh crore to Railways (record high)</li>
+                            <li>Dedicated Freight Corridor: Eastern (1,337 km) and Western (1,506 km)</li>
+                            <li>Mumbai-Ahmedabad High-Speed Rail (Bullet Train) under construction</li>
+                            <li>Complete 100% electrification by 2030</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steel -->
+            <div id="steel" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">2nd</div>
+                        <div class="stat-label">Largest Steel Producer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">200 MTPA</div>
+                        <div class="stat-label">Current Production Capacity</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">300 MTPA</div>
+                        <div class="stat-label">Target by 2030</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>India is the world's second-largest producer of crude steel, with an output of 151.14 MT of crude steel and finished steel production of 145.30 MT in FY25. India's steel production capacity increased to 200.33 MT in FY25, and is anticipated to rise to 300 MT by FY30.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Production Growth</h3>
+                        <ul class="content-list">
+                            <li>India's crude steel production capacity reached 200.33 MT in FY2024-25</li>
+                            <li>On track to hit 300 MT by FY2030-31</li>
+                            <li>Private sector now contributes over 75% of total capacity</li>
+                            <li>Greenfield projects in Odisha, Maharashtra, Chhattisgarh to add 40 MTPA by 2027</li>
+                            <li>Per-capita consumption: 100 kgs in FY26, targeting 160 kgs by FY31</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Industry Leaders</h3>
+                        <ul class="content-list">
+                            <li>Tata Steel: 40 MTPA capacity across Jamshedpur, Kalinganagar, Meramandali</li>
+                            <li>JSW Steel: 38.5 MTPA with focus on sustainability and green steelmaking</li>
+                            <li>SAIL: 22 MTPA across five integrated plants</li>
+                            <li>AM/NS India: 9.6 MTPA, expanding Hazira to 15 MTPA by 2026</li>
+                            <li>JSPL: 12 MTPA, focused on clean energy use</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Government Support</h2>
+                    
+                    <ul class="content-list">
+                        <li>New PLI Scheme for Specialty Steel with ₹4,400 crore outlay</li>
+                        <li>Expected 25 MT additional capacity by FY 2029 with ₹29,500 crore investment</li>
+                        <li>Bokaro expansion: ₹20,000 crore to raise production from 5.25 to 7.55 MTPA</li>
+                        <li>₹5,000 crore scheme for low-emission operations in secondary steel sector</li>
+                        <li>Hydrogen-based steel trials in Hisar and Jamshedpur</li>
+                    </ul>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thermal & Nuclear -->
+            <div id="thermal" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">243 GW</div>
+                        <div class="stat-label">Thermal Power Capacity</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">8.9 GW</div>
+                        <div class="stat-label">Nuclear Power Capacity</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">100 GW</div>
+                        <div class="stat-label">Nuclear Target by 2047</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>India's power mix is anchored by thermal energy, which at 243 GW remains the largest source of electricity. Meanwhile, nuclear power, with 25 reactors producing 8.9 GW, is small but expanding rapidly with recent approvals at Mahi Banswara in Rajasthan.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Thermal Power Outlook</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Current Status</h3>
+                        <ul class="content-list">
+                            <li>Total thermal capacity: ~243.8 GW (49.75% of total capacity as of July 2025)</li>
+                            <li>Under Construction: ~38.9 GW including stressed projects</li>
+                            <li>Contracts Awarded FY24-25: ~15.44 GW thermal capacity</li>
+                            <li>Total Proposed Additions by 2032: ~97 GW to reach ~307 GW</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Major Thermal Clusters</h3>
+                        <ul class="content-list">
+                            <li>Singrauli-Sonbhadra (UP-MP): ~20 GW</li>
+                            <li>Korba-Raigarh (Chhattisgarh): ~25 GW</li>
+                            <li>Talcher-Angul (Odisha): ~10-12 GW</li>
+                            <li>Mundra-Kutch (Gujarat): >10 GW</li>
+                            <li>Chandrapur-Nagpur-Wardha (Maharashtra): ~15 GW</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Nuclear Power Expansion</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Growth Targets</h3>
+                        <ul class="content-list">
+                            <li>Current: 24 reactors totaling 8,180 MW (3% of electricity)</li>
+                            <li>Target: 22,480 MW by 2032 and 100 GW by 2047</li>
+                            <li>NTPC plans to add 30 GW of nuclear capacity</li>
+                            <li>Nuclear share projected to grow from 1.5% to 5% by 2035</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Key Nuclear Projects</h3>
+                        <ul class="content-list">
+                            <li>Mahi Banswara (Rajasthan): 2,800 MW (4×700), ₹42,000 crore investment</li>
+                            <li>Jaitapur: 10,380 MW (6×1,650) - world's largest nuclear station planned</li>
+                            <li>Kudankulam expansion ongoing with Russian VVER units</li>
+                            <li>Gorakhpur, Chutka, Cheemeni projects in pipeline</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wind Power -->
+            <div id="wind" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">4th</div>
+                        <div class="stat-label">Largest Wind Power Market</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">51.5 GW</div>
+                        <div class="stat-label">Total Installed Wind Capacity</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">100 GW</div>
+                        <div class="stat-label">Target by 2030</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Industry Overview</h2>
+                    <p>India's wind energy market in 2025 has kicked off on a strong note. With 2.1 GW of new wind capacity added in just the first four months of FY25 and record renewable installations overall, investor and developer confidence is at a high.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Market Highlight & Outlook</h2>
+                    
+                    <div class="highlight-box">
+                        <h3 class="subsection-title">Record Growth</h3>
+                        <ul class="content-list">
+                            <li>India added 21.9 GW of solar and wind capacity in H1 2025, up 56% YoY</li>
+                            <li>Wind capacity surged by 82% compared to last year</li>
+                            <li>About 3.5 GW of new wind capacity added in H1 2025</li>
+                            <li>India's RE installed capacity reached ~234 GW by June 2025</li>
+                            <li>Wind contributes 22% of total renewable energy segment</li>
+                        </ul>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">State-wise Capacity (as of March 2025)</h3>
+                        <ul class="content-list">
+                            <li>Gujarat: 12,677 MW (highest)</li>
+                            <li>Tamil Nadu: 11,739 MW</li>
+                            <li>Karnataka: 7,351 MW</li>
+                            <li>Maharashtra: 5,284 MW</li>
+                            <li>Rajasthan: 5,208 MW</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Government Support & Investments</h2>
+                    
+                    <ul class="content-list">
+                        <li>RE budget raised by 53% to ₹26,549 crore for 2025-26</li>
+                        <li>New localization norms for wind turbines mandating domestic sourcing</li>
+                        <li>Offshore wind target of 30 GW by 2030 (Gujarat & Tamil Nadu focus)</li>
+                        <li>Wind Repowering & Life-Extension Policy recognizes 25.4 GW potential</li>
+                        <li>SECI's competitive bidding ensuring steady project pipeline</li>
+                    </ul>
+                </div>
+
+                <div class="contact-section">
+                    <h3>📬 Contact MI Team</h3>
+                    <div class="contact-info">
+                        <div class="contact-card">
+                            <strong>Afak Sande</strong><br>
+                            sande.afak@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Gaurav Rahane</strong><br>
+                            rahane.gaurav@sanghviglobal.com
+                        </div>
+                        <div class="contact-card">
+                            <strong>Shubham Sarode</strong><br>
+                            sarode.shubham@sanghviglobal.com
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="view-toggle">
-          <button class="toggle-btn active" data-view="summary">Summary</button>
-          <button class="toggle-btn" data-view="full">Full Text</button>
-        </div>
-        <div class="scroll-area">
-          <div class="summary-grid" id="summary-2"></div>
-          <div class="accordion" id="full-2" style="display:none"></div>
-          <div class="loading" id="loading-2">Loading & summarizing…</div>
-        </div>
-      </section>
+    </div>
 
-      <section class="panel" id="panel-3">
-        <div class="panel-header">
-          <h2>Newsletter 3</h2>
-          <div class="link-row">Open PDF ⤴</a></div>
-        </div>
-        <div class="view-toggle">
-          <button class="toggle-btn active" data-view="summary">Summary</button>
-          <button class="toggle-btn" data-view="full">Full Text</button>
-        </div>
-        <div class="scroll-area">
-          <div class="summary-grid" id="summary-3"></div>
-          <div class="accordion" id="full-3" style="display:none"></div>
-          <div class="loading" id="loading-3">Loading & summarizing…</div>
-        </div>
-      </section>
-
-      <section class="panel" id="panel-4">
-        <div class="panel-header">
-          <h2>Newsletter 4</h2>
-          <div class="link-row">Open PDF ⤴</a></div>
-        </div>
-        <div class="view-toggle">
-          <button class="toggle-btn active" data-view="summary">Summary</button>
-          <button class="toggle-btn" data-view="full">Full Text</button>
-        </div>
-        <div class="scroll-area">
-          <div class="summary-grid" id="summary-4"></div>
-          <div class="accordion" id="full-4" style="display:none"></div>
-          <div class="loading" id="loading-4">Loading & summarizing…</div>
-        </div>
-      </section>
-
-      <section class="panel" id="panel-5">
-        <div class="panel-header">
-          <h2>Newsletter 5</h2>
-          <div class="link-row">Open PDF ⤴</a></div>
-        </div>
-        <div class="view-toggle">
-          <button class="toggle-btn active" data-view="summary">Summary</button>
-          <button class="toggle-btn" data-view="full">Full Text</button>
-        </div>
-        <div class="scroll-area">
-          <div class="summary-grid" id="summary-5"></div>
-          <div class="accordion" id="full-5" style="display:none"></div>
-          <div class="loading" id="loading-5">Loading & summarizing…</div>
-        </div>
-      </section>
-
-      <section class="panel" id="panel-6">
-        <div class="panel-header">
-          <h2>Newsletter 6</h2>
-          <div class="link-row">Open PDF ⤴</a></div>
-        </div>
-        <div class="view-toggle">
-          <button class="toggle-btn active" data-view="summary">Summary</button>
-          <button class="toggle-btn" data-view="full">Full Text</button>
-        </div>
-        <div class="scroll-area">
-          <div class="summary-grid" id="summary-6"></div>
-          <div class="accordion" id="full-6" style="display:none"></div>
-          <div class="loading" id="loading-6">Loading & summarizing…</div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="app-footer">
-      <small>Tip: Use <kbd>1–6</kbd> to switch tabs; click cards to expand; headings animate into view.</small>
-    </footer>
-  </div>
-
-  <!-- ===== JS: PDF.js (ESM via jsDelivr) + Summarizer + UI ===== -->
-  <script type="module">
-    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.449/+esm';
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.449/build/pdf.worker.min.js';
-
-    // Configure your PDF paths or URLs
-    const PDF_URLS = [
-      'https://sanghvicranes1-my.sharepoint.com/:b:/g/personal/rahane_gaurav_sanghviglobal_com/IQDRgA6RB4FUQaBxJ0ps8XRQAazSnKTaMkgwtyjHQhg5K1U?e=6rWoDp',
-      'assets/newsletters/newsletter-2.pdf',
-      'assets/newsletters/newsletter-3.pdf',
-      'assets/newsletters/newsletter-4.pdf',
-      'assets/newsletters/newsletter-5.pdf',
-      'assets/newsletters/newsletter-6.pdf'
-    ];
-
-    const $  = (sel, ctx=document) => ctx.querySelector(sel);
-    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-
-    // Theme toggle
-    const themeToggle = $('#themeToggle');
-    const root = document.documentElement;
-    function setTheme(mode){
-      root.setAttribute('data-theme', mode);
-      localStorage.setItem('theme', mode);
-    }
-    (function initTheme(){
-      const persisted = localStorage.getItem('theme');
-      if (persisted) setTheme(persisted);
-    })();
-    themeToggle.addEventListener('click', () => {
-      const cur = root.getAttribute('data-theme');
-      setTheme(cur === 'light' ? '' : 'light');
-    });
-
-    // Tabs
-    const tabs   = $$('.tab');
-    const panels = $$('.panel');
-    function showPanel(id) {
-      panels.forEach(p => p.classList.remove('show'));
-      tabs.forEach(t => t.classList.remove('active'));
-      const el = '#' + id;
-      $(el)?.classList.add('show');
-      $(`.tab[data-target="${id}"]`)?.classList.add('active');
-      history.replaceState(null, '', `#${id}`);
-    }
-    tabs.forEach(tab => tab.addEventListener('click', () => showPanel(tab.dataset.target)));
-    window.addEventListener('keydown', (e) => {
-      if (e.key >= '1' && e.key <= '6') showPanel(`panel-${e.key}`);
-    });
-    (function initHash(){ const h = location.hash.replace('#',''); showPanel(h || 'panel-1'); })();
-
-    // -------- Simple client-side extractive summarizer --------
-    const STOP_WORDS = new Set(['the','a','an','and','or','but','if','in','on','of','for','to','with','at','by','from','as','is','are','was','were','be','been','it','its','this','that','these','those','we','you','they']);
-    function tokenize(text){ return text.toLowerCase().match(/[a-zA-Z0-9]+/g) || []; }
-    function sentences(text){ return text.split(/(?<=[.!?])\s+/).filter(s=> s.trim().length>0); }
-    function freqMap(words){ const f={}; for(const w of words){ if(STOP_WORDS.has(w)) continue; f[w]=(f[w]||0)+1; } return f; }
-    function scoreSentence(s, f){ let score=0; for(const w of tokenize(s)){ if(f[w]) score+=f[w]; } return score; }
-    function summarize(text, k=3){
-      const sents = sentences(text);
-      if(sents.length<=k) return sents;
-      const f = freqMap(tokenize(text));
-      const ranked = sents.map((s,i)=>({s, i, score: scoreSentence(s,f)})).sort((a,b)=> b.score - a.score);
-      const topIdx = new Set(ranked.slice(0, Math.min(k, ranked.length)).map(r=>r.i));
-      return sents.filter((_,i)=> topIdx.has(i));
-    }
-
-    // Intersection Observer for card animation
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); } });
-    }, {threshold: 0.2});
-
-    // Build each newsletter view
-    PDF_URLS.forEach(async (url, idx)=>{
-      const n = idx+1;
-      const openLink   = document.getElementById(`open-${n}`);
-      const summaryGrid= document.getElementById(`summary-${n}`);
-      const fullAcc    = document.getElementById(`full-${n}`);
-      const loading    = document.getElementById(`loading-${n}`);
-      if(openLink) openLink.href = url;
-
-      try{
-        const loadingTask = pdfjsLib.getDocument(url);
-        const pdf = await loadingTask.promise;
-        for(let p=1; p<=pdf.numPages; p++){
-          const page = await pdf.getPage(p);
-          const textContent = await page.getTextContent();
-          let maxSize=0, heading=''; const parts=[];
-          textContent.items.forEach(item=>{
-            const s=item.str||''; const t=item.transform||[1,0,0,1,0,0]; const size=Math.abs(t[0]);
-            if(size>maxSize && s.trim().length>=6){ maxSize=size; heading=s.trim(); }
-            parts.push(s);
-          });
-          const fullText = parts.join(' ');
-          const bullets  = summarize(fullText, 3);
-
-          // Summary card
-          const card = document.createElement('div'); card.className='summary-card';
-          const h3   = document.createElement('h3'); h3.textContent = heading ? `Page ${p}: ${heading}` : `Page ${p}`;
-          const ul   = document.createElement('ul'); bullets.forEach(b=>{ const li=document.createElement('li'); li.textContent=b; ul.appendChild(li); });
-          const more = document.createElement('div'); more.className='more'; more.textContent = summarize(fullText, 5).slice(3).join(' ');
-          card.appendChild(h3); card.appendChild(ul); card.appendChild(more);
-          card.addEventListener('click', ()=> card.classList.toggle('expanded'));
-          summaryGrid.appendChild(card); io.observe(card);
-
-          // Full text accordion item
-          const item   = document.createElement('div'); item.className='acc-item';
-          const head   = document.createElement('div'); head.className='acc-head';
-          const h4     = document.createElement('h4'); h4.textContent = heading ? `Page ${p}: ${heading}` : `Page ${p}`;
-          const chevron= document.createElement('span'); chevron.textContent='▸';
-          head.appendChild(h4); head.appendChild(chevron);
-          const body   = document.createElement('div'); body.className='acc-body';
-          const pre    = document.createElement('pre'); pre.textContent = fullText; body.appendChild(pre);
-          head.addEventListener('click', ()=>{ body.classList.toggle('open'); chevron.textContent = body.classList.contains('open') ? '▾' : '▸'; });
-          item.appendChild(head); item.appendChild(body);
-          fullAcc.appendChild(item);
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
         }
-        if(loading) loading.remove();
-      }catch(err){
-        if(loading) loading.textContent='Failed to load or summarize.';
-        console.error('PDF error', err);
-      }
-    });
-
-    // View toggles per panel
-    $$('.toggle-btn').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const panel = btn.closest('.panel');
-        const summary = panel.querySelector('.summary-grid');
-        const full    = panel.querySelector('.accordion');
-        panel.querySelectorAll('.toggle-btn').forEach(b=> b.classList.remove('active'));
-        btn.classList.add('active');
-        if(btn.dataset.view==='summary'){ summary.style.display='grid'; full.style.display='none'; }
-        else { summary.style.display='none'; full.style.display='block'; }
-      });
-    });
-  </script>
+    </script>
 </body>
+</html>
